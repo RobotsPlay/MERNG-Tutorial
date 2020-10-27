@@ -8,3 +8,12 @@
   width: 450px;
   margin: 0 auto;
 }
+
+.ui.teal.button:active, .ui.teal.buttons .button:active {
+  background-color: #00b5ad;
+}
+
+.ui.basic.teal.button:active, .ui.basic.teal.buttons .button:active {
+  color: #00b5ad !important;
+  box-shadow: 0 0 0 1px #00b5ad inset !important
+}

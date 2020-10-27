@@ -1,16 +1,13 @@
-import React from 'react';
-import {Button, Card, Icon, Image, Label} from 'semantic-ui-react';
+import React, {useContext} from 'react';
+import {Button, Card, Icon, Image, Label, Popup} from 'semantic-ui-react';
 import moment from 'moment';
 import {Link} from 'react-router-dom';
 
-function PostCard({post: {body, createdAt, id, username, likeCount, commentCount, likes, comments }}) {
-    function likePost() {
-        console.log('like post')
-    }
+import {AuthContext} from '../context/auth';
+import LikeButton from '../components/LikeButton';
 
-    function commentOnPost() {
-        console.log('like post')
-    }
+function PostCard({post: {body, createdAt, id, username, likeCount, commentCount, likes, comments }}) {
+    const {user} = useContext(AuthContext);
 
     return (
         <Card fluid>
@@ -21,16 +18,9 @@ function PostCard({post: {body, createdAt, id, username, likeCount, commentCount
                 <Card.Description>{body}</Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <Button as="div" labelPosition="right" onClick={likePost}>
-                    <Button color="teal" basic>
-                        <Icon name="heart" />
-                    </Button>
-                    <Label basic color="teal" pointing="left">
-                        {likeCount}
-                    </Label>
-                </Button>
+                <LikeButton user={user} post={{id, likeCount, likes}} />
 
-                <Button as="div" labelPosition="right" onClick={commentOnPost}>
+                <Button labelPosition="right" as={Link} to={`/posts/${id}`} title="Comment on this post">
                     <Button color="blue" basic>
                         <Icon name="comments" />
                     </Button>
@@ -38,6 +28,19 @@ function PostCard({post: {body, createdAt, id, username, likeCount, commentCount
                         {commentCount}
                     </Label>
                 </Button>
+
+                {user && user.username === username && (
+                     <Popup
+                        trigger={
+                            <Button as="div" color="red" icon title="Delete this post" floated="right">
+                                <Icon name="trash" />
+                            </Button>
+                        }
+                        content={<Button color='red' content='Delete this post?' onClick={() => {console.log('Delete Post')}} />}
+                        on='click'
+                        position='top center'
+                    />
+                )}
             </Card.Content>
         </Card>
     )
