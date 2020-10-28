@@ -1,20 +1,21 @@
 import React, {useContext} from 'react';
-import {Button, Card, Icon, Image, Label, Popup} from 'semantic-ui-react';
+import {Button, Card, Icon, Image, Label} from 'semantic-ui-react';
 import moment from 'moment';
 import {Link} from 'react-router-dom';
 
 import {AuthContext} from '../context/auth';
 import LikeButton from '../components/LikeButton';
+import DeleteButton from '../components/DeleteButton';
 
 function PostCard({post: {body, createdAt, id, username, likeCount, commentCount, likes, comments }}) {
     const {user} = useContext(AuthContext);
 
     return (
         <Card fluid>
-            <Card.Content>
+            <Card.Content as={Link} to={`/posts/${id}`}>
                 <Image floated="right" size="mini" src="https://react.semantic-ui.com/images/avatar/large/molly.png" />
                 <Card.Header>{username}</Card.Header>
-                <Card.Meta as={Link} to={`/posts/${id}`}>{moment(createdAt).fromNow(true)}</Card.Meta>
+                <Card.Meta>{moment(createdAt).fromNow(true)}</Card.Meta>
                 <Card.Description>{body}</Card.Description>
             </Card.Content>
             <Card.Content extra>
@@ -30,16 +31,7 @@ function PostCard({post: {body, createdAt, id, username, likeCount, commentCount
                 </Button>
 
                 {user && user.username === username && (
-                     <Popup
-                        trigger={
-                            <Button as="div" color="red" icon title="Delete this post" floated="right">
-                                <Icon name="trash" />
-                            </Button>
-                        }
-                        content={<Button color='red' content='Delete this post?' onClick={() => {console.log('Delete Post')}} />}
-                        on='click'
-                        position='top center'
-                    />
+                     <DeleteButton postId={id} />
                 )}
             </Card.Content>
         </Card>
